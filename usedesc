@@ -1,0 +1,11 @@
+#!/usr/bin/env sh
+
+# Must have xclip installed to even show menu.
+xclip -h >/dev/null || exit
+
+# using rofi run and type "usedesc"
+# pick a use flag and printout what it really mean
+chosen=$(grep -v "#\|^$" /usr/portage/profiles/use.desc | rofi -dmenu -i -l 20 -width 50 -fn Monospace-18)
+[ "$chosen" != "" ] || exit
+echo "$chosen" | tr -d '\n' | xclip -selection clipboard
+notify-send "$chosen" &

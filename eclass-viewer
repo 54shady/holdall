@@ -1,0 +1,6 @@
+#!/usr/bin/env sh
+
+source viewer.sh
+FILES_PATH='/usr/portage/eclass/'
+
+file_viewer $FILES_PATH

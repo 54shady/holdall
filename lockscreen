@@ -1,0 +1,25 @@
+#/bin/bash
+
+#depends
+# imagemagick, scrot, xsstate, i3lock
+
+# Approximate timeout rate in milliseconds (checked every 5 seconds)
+timeout="10000"
+
+# Take a screenshot
+scrot /tmp/lockscreen.png
+
+# Add the lock to the swirled and blurred image
+LOCKPNG="$HOME/holdall/logo.png"
+[[ -f $LOCKPNG ]] &&
+convert /tmp/lockscreen.png -paint 2 -swirl 360 $LOCKPNG -gravity center -composite -matte /tmp/lockscreen.png
+i3lock -e -f -c 000000 -i /tmp/lockscreen.png
+
+# maybe pause music
+#mpc pause
+
+# if still locked after timeout milliseconds, turn off the screen
+#while [[ $(pgrep -x i3lock) ]]; do
+#	[[ $timeout -lt $(xsstate -i) ]] && xset dpms force off
+#	sleep 5
+#done

@@ -1,0 +1,21 @@
+#!/bin/sh
+
+# A wrapper script for system functions.
+
+# For non-systemd init systems.
+case "$(readlink -f /sbin/init)" in
+	*runit*) hib="sudo -A zzz" ;;
+	*openrc*) reb="sudo -A openrc-shutdown -r"; shut="sudo -A openrc-shutdown -p" ;;
+esac
+
+cmds="\
+🔒 lock		i3lock -c 000000
+🚪 leave dwm	kill -TERM $(pgrep -u $USER "\bdwm$")
+♻ renew dwm	kill -HUP $(pgrep -u $USER "\bdwm$")
+🐻 hibernate	slock ${hib:-sudo -A pm-suspend}
+🔃 reboot	${reb:-sudo -A reboot}
+🖥 shutdown	${shut:-sudo -A shutdown -h now}"
+
+choice="$(echo "$cmds" | cut -d'	' -f 1 | rofi -dmenu)" || exit 1
+
+`echo "$cmds" | grep "^$choice	" | cut -d '	' -f2-`
